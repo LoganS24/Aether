@@ -1,1 +1,91 @@
+Language name: Aether
+RegEx for Number literals, Letter literals, and Identifiers:
+Numbers: "^\\d+$" 
+Letter: "^[a-zA-Z]$" (handles the part of decimals in a seperate function)
+Identifiers: "^[a-zA-Z_][a-zA-Z0-9_]*$"
+
+Running the scanner: If you run the scanner file without any arguments or files you will be placed 
+in the AetherTest Mode where you are free to type statements that the scanner reads and reports
+tokens back from. If you enter a file as an argument while running the scanner file then it will read the file 
+and report the tokens in the source code from the file until the end of the file. If you have more than 1 file 
+it will report that there were too many arguments and exit the program. 
+
+My test cases in the test file I used some actual statements you may see in an actual source code file
+and also alot of different characters and Identifiers that may show up as well. The scanner reported
+errors for certain unhandled characters such as the @ symbol that would be considered an edge case I can handle 
+by implementing it as a character for a string. 
+
+Test cases expected results from the Test/Lab1Test.txt file when ran with the scanner file:
+[line 18] Scanner Error: Unexpected character: [
+[line 19] Scanner Error: Unexpected character: ]
+[line 30] Scanner Error: Unexpected character: &
+[line 31] Scanner Error: Unexpected character: ^
+[line 32] Scanner Error: Unexpected character: %
+[line 33] Scanner Error: Unexpected character: $
+[line 34] Scanner Error: Unexpected character: #
+[line 35] Scanner Error: Unexpected character: @
+[line 41] Scanner Error: Unexpected character: \
+IDENTIFIER int null 1
+IDENTIFIER num null 1
+EQUAL = null 1
+NUMBER 10 10 1
+SEMICOLON ; null 1
+AND and null 2
+IF if null 3
+CLASS class null 4
+ELSE else null 5
+FALSE false null 6
+OR or null 7
+IDENTIFIER orchid null 8
+PRINT print null 9
+RETURN return null 10
+SUPER super null 11
+THIS this null 12
+TRUE true null 13
+VAR var null 14
+WHILE while null 15
+LEFT_BRACE { null 16
+RIGHT_BRACE } null 17
+STRING "
+" 
+ 21
+SLASH / null 22
+DOT . null 24
+GREATER > null 25
+LESS < null 26
+LEFT_PAREN ( null 27
+RIGHT_PAREN ) null 28
+STAR * null 29
+BANG ! null 36
+IDENTIFIER hello null 37
+STRING "hello" hello 38
+COMMA , null 39
+SEMICOLON ; null 40
+IDENTIFIER n null 41
+IDENTIFIER j1a8aj null 42
+IDENTIFIER da null 42
+MINUS - null 43
+PLUS + null 44
+FOR for null 45
+LEFT_PAREN ( null 45
+IDENTIFIER int null 45
+IDENTIFIER i null 45
+EQUAL = null 45
+NUMBER 0 0 45
+SEMICOLON ; null 45
+IDENTIFIER i null 45
+LESS < null 45
+IDENTIFIER length null 45
+SEMICOLON ; null 45
+IDENTIFIER i null 45
+PLUS + null 45
+PLUS + null 45
+RIGHT_PAREN ) null 45
+LEFT_BRACE { null 45
+RIGHT_BRACE } null 45
+EQUAL_EQUAL == null 46
+BANG_EQUAL != null 47
+LESS_EQUAL <= null 48
+GREATER_EQUAL >= null 49
+EOF  null 49
 

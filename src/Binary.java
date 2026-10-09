@@ -1,0 +1,36 @@
+public class Binary {
+    private final Object Left;
+    private final Token Operator;
+    private final Object Right;
+
+    public Binary(Object left, Token operator, Object right) {
+        this.Left = left;
+        this.Operator = operator;
+        this.Right = right;
+    }
+
+    public String toString() {
+        //returns string version of the LISP representation of the binary expression
+        return "(" + Operator.getLexeme() + " " + Left.toString() + " " + Right.toString() + ")"; 
+    }
+
+
+    public static void main(String[] args) {
+        // Example usage
+        Token operator = new Token(TokenType.PLUS, "+", null, 1);
+        Literal left = new Literal(5);
+        Literal right = new Literal(3);
+        Binary binaryExpression = new Binary(left, operator, right);
+        System.out.println(binaryExpression.toString()); // Output: (+ 5 3)
+
+        Unary unaryExpression = new Unary(new Token(TokenType.MINUS, "-", null, 1), new Literal(123));
+        Grouping groupingExpression = new Grouping(new Literal(45.67));
+        Token operator2 = new Token(TokenType.STAR, "*", null, 1);
+        Binary binaryExpression2 = new Binary(unaryExpression, operator2, groupingExpression);
+        System.out.println(binaryExpression2.toString()); // Output: (* (- 123) (45.67))
+
+        Binary completeExpression = new Binary(binaryExpression, operator2, binaryExpression2);
+        System.out.println(completeExpression.toString()); // Output: (* (+ 5 3) (* (- 123) (45.67)))
+    }
+
+}

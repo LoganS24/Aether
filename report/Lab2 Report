@@ -1,0 +1,11 @@
+In Lab 2, I created 4 new classes. A Binary, Unary, Grouping, and Literal class to represent the Grammar classes. These classes were very 
+simple to create. 
+Binary class needs a left Object, an operand token, and a right operand. 
+Unary class needs an operand token ("-" or "!") and an Object
+Grouping class just needs an Object
+Literal class needs just an Object
+
+My test cases represented the creation of 3 different binary expressions. I made sure to include at least one of each of the new classes inside 
+the binary expressions. My last test case included a binary expression with 2 binary expressions as the left/right objects.
+
+I have not run into any limitations or failing test cases as of now. 

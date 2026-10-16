@@ -1,0 +1,11 @@
+I made no changes to my language's grammar during this lab. In this lab, I created a new Java class
+called parser that would take in a list of tokens and parse through it using some of the grammar
+rules we discussed in class. We would take a token and go through the rules from expression to equality
+to comparison to term to factor to unary to primary. 
+
+My test cases went through a variety of different scenarios, including testing strings, numbers, unary expressions
+, a binary expression with more unary, term, and factor. I also added some comparison expressions to help represent
+a variety of cases there. Even including a string inside the comparison, which would not normally be
+valid, but for now it is still a valid expression. 
+
+Attached in separate files will be the picture of the expression tree for "1 + 2 * (3 - 4)." and the test case result screen shot.

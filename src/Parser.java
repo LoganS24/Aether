@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.ArrayList;
 
 public class Parser {
 
@@ -11,12 +12,41 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    public Object parse() {
-        try {
-            return expression();
+    public List<Object> parse() {
+        List<Object> statements = new ArrayList<>();
+        while(!isAtEnd()) {
+            Object stmt = statement();
+            if (stmt != null) {
+                statements.add(stmt);
+            }
+        }
+        return statements;
+    }
+
+
+    // Top of the grammar: statement -> exprStatement | printStatement ;
+    private Object statement() {
+        try{
+        // Implementation for parsing a statement
+        if(match(TokenType.PRINT)) {
+            Object value = expression();
+            consume(TokenType.SEMICOLON, "Expect ';' after value.");
+            return new PrintStatement(value);
+        }
+
+        return expressionStatement();
         } catch (ParseError error) {
+            // Catch errors, synchronize the parser and continue parsing next statements
+            synchronize();
             return null;
         }
+    }
+    
+    // Gives Expression statement
+    private Object expressionStatement() {
+        Object expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new ExpressionStatement(expr);
     }
 
     // expression -> equality ;
@@ -143,6 +173,25 @@ public class Parser {
 
     private Token previous() {
         return tokens.get(current - 1);
+    }
+
+    // Synchronization method to recover from errors
+    //Method to be added to as more is added to the language
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()) {
+            if(previous().getType() == TokenType.SEMICOLON) return;
+
+            switch (peek().getType()) {
+                case PRINT:
+                    return;
+                default:
+                    break;
+            }
+
+            advance();
+        }
     }
 
     private ParseError error(Token token, String message) {

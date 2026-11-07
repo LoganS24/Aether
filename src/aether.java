@@ -1,4 +1,4 @@
-package Aether;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -62,6 +62,7 @@ public class aether {
         }
     }
 
+    //Aether Test Mode
     private static void runATest() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -72,10 +73,11 @@ public class aether {
             String line = scanner.nextLine();
 
             // if the user inputs nothing, we break out of the loop and exit the program
-            if (line == null)
+            if (line == "")
                 break;
             run(line);
         }
+        scanner.close();
     }
 
     private static void run(String source) {
@@ -85,10 +87,15 @@ public class aether {
         // runs the scan tokens method to generate the tokens and stores them in a list
         List<Token> tokens = scanner.scanTokens();
 
-        // prints each token in the source code
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
+        //instantiate parser with token list
+        Parser parser = new Parser(tokens);
+
+        //run parser on token list
+        List<Object> statements = parser.parse();
+
+        Evaluator evaluate = new Evaluator();
+        evaluate.interpret(statements);
+        
     }
 
     public List<Token> scanTokens() {
@@ -276,20 +283,18 @@ public class aether {
 
     // Helper methods to check if a character is a letter, digit, or alphanumeric (used for scanning identifiers and numbers)
     private boolean isAlpha(char c) {
-        return (c >= 'a' && c <= 'z') ||
-                (c >= 'A' && c <= 'Z') ||
-                c == '_';
+        return String.valueOf(c).matches("^[a-zA-Z]$");
     }
 
     // Helper method to check if a character is alphanumeric (used for scanning identifiers)
     private boolean isAlphaNumeric(char c) {
-        return isAlpha(c) || isDigit(c);
+        return (String.valueOf(c)).matches("^[a-zA-Z_][a-zA-Z0-9_]*$");
     }
 
 
     // Helper method to check if a character is a digit (used for scanning numbers)
     private boolean isDigit(char c) {
-        return c >= '0' && c <= '9';
+        return (String.valueOf(c)).matches("^\\d+$");
     }
 
 
@@ -319,4 +324,5 @@ public class aether {
     private static void scannerError(int line, String message) {
         System.err.println("[line " + line + "] Scanner Error: " + message);
     }
+
 }

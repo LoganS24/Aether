@@ -2,6 +2,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class Evaluator {
+    private Environment environment = aether.globalEnvironment;
 
     public void interpret(List<Object> statements) {
         try{
@@ -16,10 +17,39 @@ public class Evaluator {
     public Object evaluate(Object expr) {
         if (expr == null) return null;
 
+        if (expr instanceof Block) {
+            executeBlock(((Block) expr).declarations, new Environment(environment));
+            return null;
+        }
+
         if (expr instanceof PrintStatement) {
             Object value = evaluate(getPrivateField(expr, "expression"));
             System.out.println(stringify(value));
             return null; // Print statements do not return a value
+        }
+
+        if (expr instanceof VarDecl) {
+            String name = (String) getPrivateField(expr, "name");
+            Object initializer = getPrivateField(expr, "expression");
+            Object value = null;
+            if (initializer != null) {
+                value = evaluate(initializer);
+            }
+            environment.define(name, value);
+            return null; // Variable declarations do not return a value
+        }
+
+        if (expr instanceof VarAssign) {
+            String name = (String) getPrivateField(expr, "name");
+            Object expression = getPrivateField(expr, "expression");
+            Object value = evaluate(expression);
+            environment.assign(name, value);
+            return value;
+        }
+
+        if(expr instanceof Variable) {
+            String name = ((Variable) expr).name.getLexeme();
+            return environment.get(name);
         }
 
         if (expr instanceof ExpressionStatement) {
@@ -43,6 +73,18 @@ public class Evaluator {
         }
 
         throw new RuntimeException("Unknown expression type: " + expr.getClass().getName());
+    }
+
+    private void executeBlock(List<Object> declarations, Environment blockEnvironment) {
+        Environment previous = this.environment;
+        try {
+            this.environment = blockEnvironment;
+            for (Object declaration : declarations) {
+                evaluate(declaration);
+            }
+        } finally {
+            this.environment = previous;
+        }
     }
 
     private Object evaluateLiteral(Literal literal) {

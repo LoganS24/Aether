@@ -1,0 +1,91 @@
+Language name: Aether - Logan Sourile
+
+In this lab, we added the variables (declaration, Access, and Assignment) and scope 
+to the language. 
+To add these functional aspects, I created several new classes. I added the Variable 
+class (to help with IDENTIFIERS in the literal parsing), a varDecl (for variable
+declaration AST nodes), a varAssign(for variable assignment AST nodes), an 
+Environment class (for variable storage), and a block class (for the creation 
+of scopes
+
+Some design choices I made in my language included allowing programmers to create 
+a variable without an initializer, but if they tried to access it, it would throw 
+an error saying it wasn't initialized yet. This helps reduce issues related to 
+null/nil values being in the program, and if they are caught as errors 
+and instead initialized beforehand, we can make sure clean programming 
+is written. 
+
+Another design choice I made was to throw a runtime error if the user tries to
+access a variable before they declare it. This was made this way to also ensure 
+we do not have messy declarations and keep everything streamlined. To access a 
+variable, it needs to be made first. 
+
+One other design choice I made with the variables was to not allow redeclaration
+in my language. I disallow users from putting: var a = 1; var a = 2; and instead
+this creates an error. I wanted to make sure that the code that is being written 
+is easy to read, and if you have multiple variable names being redeclared all the 
+time, it can get confusing about what is going on. 
+
+The scope aspect of this lab uses part of the environment class and the block 
+class to handle scope. The environment class is used to hold all the variables for
+a certain scope. So each time a new block is made, the environment class keeps track
+of that environment's predecessor. 
+
+The block part in my parser goes through the different declarations/statements in 
+the block and adds these to my blocks list of declarations. It parses through all 
+these declarations and adds any of the variables that it comes across into its own
+environment/scope. 
+
+In my evaluator, we take any variable declarations and run the define method in 
+its designated environment we are in. If we run into a variable token, we need to 
+access it, so we use the "get" method in the designated environment we are in. If
+we cannot find the variable IDENTIFIER, we recursively look through each predecessor
+environment to find it until we hit the global environment. Lastly, we have the 
+assignment part of the evaluation, where we have to check if the variable exists 
+(if not, check parent environments), and then whether we are looking to assign the 
+variable to something or if we have an expression starting with an IDENTIFIER. 
+
+Lastly, we added the error handling for missing braces in blocks and invalid assignments
+in the variable assignment portion of the variable additions. I also updated the 
+synchronise method to also detect if we hit a new block or if we found a new variable
+declaration. 
+
+Using the given test cases from the book: 
+/*
+var a = "global a";
+var b = "global b";
+var c = "global c";
+{
+var a = "outer a";
+var b = "outer b";
+{
+var a = "inner a";
+print a;
+print b;
+print c;
+}
+print a;
+print b;
+print c;
+}
+print a;
+print b;
+print c;
+*/
+I was able to get the output below: 
+/*
+inner a
+outer b
+global c
+outer a
+outer b
+global c
+global a
+global b
+global c
+*/
+
+This output is correct, as it looks to print each of the closest variables it can find
+that were declared in its different levels of scope. If the scope is in the inner 
+portion, then it looks to the outer and global scope to find the next declared 
+and initialized variable. 

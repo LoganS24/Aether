@@ -22,6 +22,9 @@ public class Environment {
 
     public Object get(String name) {
         if (variables.containsKey(name)) {
+            if (variables.get(name) == null) {
+                throw new RuntimeException("Variable '" + name + "' is not initialized.");
+            }
             return variables.get(name);
         }
 
